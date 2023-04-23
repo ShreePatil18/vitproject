@@ -1,2 +1,5 @@
 Flask
 Flask-PyMongo
+gunicorn
+python-dotenv==0.21.1
+black==22.12.0

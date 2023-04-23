@@ -2,18 +2,20 @@ from flask import Flask,render_template,request,redirect,session
 from flask_pymongo import PyMongo
 import datetime
 from pymongo import MongoClient
-
-
+from dotenv import load_dotenv
+import bson
+import os
 
 app=Flask(__name__)
 
 
 
-app.config["MONGO_URI"] = "mongodb://localhost:27017/vitproject"
-mongo = PyMongo(app)
+# app.config["MONGO_URI"] = "mongodb://localhost:27017/vitproject"
+# mongo = PyMongo(app)
 
-
-cluster = MongoClient("mongodb+srv://bondjames181920:Shreyash18@cluster0.d3op3bw.mongodb.net/?retryWrites=true&w=majority")
+load_dotenv()
+connection_string: str = os.environ.get("CONNECTION_STRING")
+cluster = MongoClient(connection_string)
 db = cluster["db"]
 collection = db["userdata"]
 collection2=db["projectdetail"]
@@ -65,7 +67,7 @@ def registration1():
 	# user = auth.create_user_with_email_and_password(email, password)
 	# user = auth.sign_in_with_email_and_password(email, password)
 	# db.child(user['localId']).child("Username").set(username)
-	user=mongo.db
+	1
 	collection.insert_one({"email":email,"password":password,"username":username,"prn":prn})
 	session['prn']=prn
 
@@ -126,6 +128,10 @@ def search():
 	else:
 		return "No such project"
 
+@app.route('/displayall',methods=['GET','POST'])
+def displayall():
+	doc=list(collection2.find({}))
+	return render_template("account.html",notes=doc)
 
 
 @app.route("/logout",methods=['GET','POST'])	
@@ -151,7 +157,7 @@ def team():
     return render_template("team.html")
 
 @app.route('/account')
-def account():
+def account():		
 	return render_template('account.html')
 
 

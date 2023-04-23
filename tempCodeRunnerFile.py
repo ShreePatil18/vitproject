@@ -1,0 +1,1 @@
+notes=list(collection2.find({$text:{$search:query}}).sort("date",-1))
